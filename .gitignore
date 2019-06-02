@@ -1,6 +1,9 @@
 # dataset folder
 dataset/
 
+# vscode folder
+.vscode/
+
 # Prerequisites
 *.d
 
@@ -33,3 +36,4 @@ dataset/
 *.exe
 *.out
 *.app
+movielens
