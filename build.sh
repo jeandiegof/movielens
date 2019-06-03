@@ -9,6 +9,7 @@ PROJECT_DIR="/home/jeandiego/UFRGS/CPD/movielens"
 BIN_DIR="$PROJECT_DIR/build"
 CC=g++
 CFLAGS="-std=c++17 -Wall -Wextra -Werror -Wpedantic"
+INCLUDES="$PROJECT_DIR/src"
 
 mkdir -p $BIN_DIR
 cd $PROJECT_DIR
@@ -19,7 +20,7 @@ do
     for file in *.cpp
     do
         echo "Building $folder/$file"
-        g++ -c $file $CFLAGS -o $BIN_DIR/$file.o
+        g++ -c $file $CFLAGS -o $BIN_DIR/$file.o -I $INCLUDES
     done
     cd $PROJECT_DIR
 done
