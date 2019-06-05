@@ -3,7 +3,9 @@
 # This should be a Makefile
 
 FOLDERS="src \
-         src/csv"
+         src/csv \
+         src/hash_table \
+         src/entry"
 
 PROJECT_DIR="/home/jeandiego/UFRGS/CPD/movielens"
 BIN_DIR="$PROJECT_DIR/build"
