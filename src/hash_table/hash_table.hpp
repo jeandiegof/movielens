@@ -11,7 +11,7 @@ class hash_table {
     hash_table();
     virtual ~hash_table() { std::cout << "~hash_table()" << std::endl; };
     virtual bool insert(const K& key, const T& data) = 0;
-    virtual const T& find(const K& key) = 0;
+    virtual const T find(const K& key) = 0;
 
     void set_size(uint32_t size);
     uint32_t size();

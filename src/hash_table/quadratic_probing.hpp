@@ -6,10 +6,11 @@ namespace hash_table {
 template <typename K, typename T>
 class quadratic_probing : public hash_table<K, T> {
    public:
+    using base = hash_table<K, T>;
     quadratic_probing() { std::cout << "quadractic_probing()" << std::endl; }
     ~quadratic_probing() { std::cout << "~quadractic_probing()" << std::endl; }
     bool insert(const K& key, const T& d) override;
-    const T& find(const K& key) override;
+    const T find(const K& key) override;
 
    private:
     virtual uint32_t hash(const K& d) override;
@@ -18,7 +19,7 @@ class quadratic_probing : public hash_table<K, T> {
 template <typename K, typename T>
 uint32_t quadratic_probing<K, T>::hash(const K& key) {
     // TODO remove this hash function
-    return key % hash_table<K, T>::table.size();
+    return 1 + (key % (base::table.size() - 1));
 }
 
 template <typename K, typename T>
@@ -28,35 +29,32 @@ bool quadratic_probing<K, T>::insert(const K& key, const T& d) {
     }
 
     K hash_value = hash(key);
-    for (uint32_t i = 0; i < hash_table<K, T>::table.size(); i++) {
-        const uint32_t target_index = static_cast<uint32_t>((hash_value + std::pow(i, 2))) % hash_table<K, T>::table.size();
-        if (hash_table<K, T>::table[target_index].key() != 0) {
-            hash_table<K, T>::table[target_index] = d;
-            hash_table<K, T>::_insertions++;
-            return true;
-        }
-        if (hash_value == target_index) {
-            hash_table<K, T>::_collisions++;
-        }
+    while (hash_table<K, T>::table[hash_value].key() != 0 &&
+           hash_table<K, T>::table[hash_value].key() != key) {
+        hash_value = hash(hash_value + 1);
     }
-    hash_table<K, T>::_is_full = true;
-    return false;
+
+    if (base::table[hash_value].key() != 0) {
+        std::cout << "The table is full!" << std::endl;
+        return false;
+    }
+    base::table[hash_value] = d;
+    return true;
 }
 
 template <typename K, typename T>
-const T& quadratic_probing<K, T>::find(const K& key) {
-    uint16_t count = 0;
+const T quadratic_probing<K, T>::find(const K& key) {
     K hash_value = hash(key);
 
-    for (uint16_t i = 0; i < hash_table<K, T>::table.size(); i++) {
-        count++;
-        const uint32_t target_index = static_cast<uint32_t>((hash_value + std::pow(i, 2))) % hash_table<K, T>::table.size();
-        if (hash_table<K, T>::table[target_index].key() == key) {
-            return hash_table<K, T>::table[target_index];
-        }
+    while (base::table[hash_value].key() != 0 &&
+           base::table[hash_value].key() != key) {
+        hash_value = hash(hash_value + 1);
     }
-    // Returns a reference to the first element if the target
-    // element was not found. Why???
-    return hash_table<K, T>::table[0];
+
+    if (base::table[hash_value].key() == 0) {
+        return {};
+    } else {
+        return base::table[hash_value];
+    }
 }
-}
+}  // namespace hash_table

@@ -5,7 +5,8 @@
 FOLDERS="src \
          src/csv \
          src/hash_table \
-         src/entry"
+         src/entry \
+				 src/inserter"
 
 PROJECT_DIR="/home/jeandiego/UFRGS/CPD/movielens"
 BIN_DIR="$PROJECT_DIR/build"
@@ -22,7 +23,7 @@ do
     for file in *.cpp
     do
         echo "Building $folder/$file"
-        g++ -c $file $CFLAGS -o $BIN_DIR/$file.o -I $INCLUDES
+        g++ -g -c $file $CFLAGS -o $BIN_DIR/$file.o -I $INCLUDES
     done
     cd $PROJECT_DIR
 done

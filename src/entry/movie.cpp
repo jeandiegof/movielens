@@ -2,6 +2,7 @@
 #include <iostream>
 
 namespace entry {
+
 void movie::set_genres(std::string const& genres) {
     _genres = genres;
 }
