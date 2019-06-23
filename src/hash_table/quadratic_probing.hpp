@@ -25,6 +25,7 @@ uint32_t quadratic_probing<K, T>::hash(const K& key) {
 template <typename K, typename T>
 bool quadratic_probing<K, T>::insert(const K& key, const T& d) {
     if (hash_table<K, T>::_is_full) {
+        std::cout << "Error inserting data. The table is full" << std::endl;
         return false;
     }
 
@@ -36,8 +37,11 @@ bool quadratic_probing<K, T>::insert(const K& key, const T& d) {
 
     if (base::table[hash_value].key() != 0) {
         std::cout << "The table is full!" << std::endl;
+        std::cout << std::flush;
+        abort();  // for tests only
         return false;
     }
+    //std::cout << "Insertion succeed" << std::endl;
     base::table[hash_value] = d;
     return true;
 }
@@ -52,6 +56,8 @@ const T quadratic_probing<K, T>::find(const K& key) {
     }
 
     if (base::table[hash_value].key() == 0) {
+        std::cout << "Error: " << key << " not found" << std::endl;
+        abort();  // for tests only
         return {};
     } else {
         return base::table[hash_value];
