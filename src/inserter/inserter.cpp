@@ -1,4 +1,4 @@
-#include "inserter/movie_table.hpp"
+#include "inserter/inserter.hpp"
 #include <algorithm>
 
 std::istream& operator>>(std::istream& str, csv::row& data) {
@@ -7,18 +7,20 @@ std::istream& operator>>(std::istream& str, csv::row& data) {
 }
 
 namespace inserter {
-movie_table::movie_table(std::ifstream& movies, std::ifstream& ratings, table_type& table)
+inserter::inserter(std::ifstream& movies, std::ifstream& ratings,
+                   movie_table& movie_table, user_table& user_table)
     : _movies(movies),
       _ratings(ratings),
-      _table(table) {
+      _movie_table(movie_table),
+      _user_table(user_table) {
 }
 
-void movie_table::load() {
+void inserter::load() {
     from_ratings();
     from_movies();
 }
 
-void movie_table::from_movies() {
+void inserter::from_movies() {
     csv::row row;
     // eliminates the table header
     _movies >> row;
@@ -31,38 +33,55 @@ void movie_table::from_movies() {
         entry.set_genres(row[2]);
         entry.set_average_rating(_rating_map[movie_id].first);
         entry.set_rating_count(_rating_map[movie_id].second);
-        entry.print();
 
-        _table.insert(entry.key(), entry);
+        _movie_table.insert(entry.key(), entry);
     }
 }
 
-void movie_table::from_ratings() {
-    std::vector<entry::rating> entries;
+void inserter::from_ratings() {
+    std::vector<entry::rating> rating_entries;
+
+    entry::user user_entry;
+    uint32_t _last_user = 1;
+    user_entry.set_key(1);
+
+    std::cout << "Parsing..." << std::endl;
     csv::row row;
     _ratings >> row;
 
-    std::cout << "Parsing..." << std::endl;
     while (_ratings >> row) {
+        uint32_t const user_id = std::stoi(row[0]);
         uint32_t const movie_id = std::stoi(row[1]);
         float const rating = std::stof(row[2]);
 
-        entry::rating entry;
-        entry.set_key(movie_id);
-        entry.set_rating(rating);
-        entries.push_back(entry);
+        entry::rating rating_entry;
+        rating_entry.set_key(movie_id);
+        rating_entry.set_rating(rating);
+        rating_entries.push_back(rating_entry);
+
+        if (_last_user != user_id) {
+            _user_table.insert(user_entry.key(), user_entry);
+            user_entry.clear();
+            user_entry.set_key(user_id);
+            user_entry.add_rating({movie_id, rating});
+            _last_user = user_id;
+        } else {
+            user_entry.add_rating({movie_id, rating});
+        }
     }
-    average_rating(entries);
+    // don't forget the last one
+    _user_table.insert(user_entry.key(), user_entry);
+    average_rating(rating_entries);
 }
 
-void movie_table::sort_rating(std::vector<entry::rating>& entries) {
+void inserter::sort_rating(std::vector<entry::rating>& entries) {
     std::cout << "Sorting..." << std::endl;
     std::sort(entries.begin(), entries.end(), [](const auto& lhs, const auto& rhs) {
         return lhs.key() < rhs.key();
     });
 }
 
-void movie_table::average_rating(std::vector<entry::rating>& entries) {
+void inserter::average_rating(std::vector<entry::rating>& entries) {
     sort_rating(entries);
     std::cout << "Evaluating average rating..." << std::endl;
     auto last = entries[0];

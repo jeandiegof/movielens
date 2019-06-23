@@ -11,7 +11,7 @@ class movie {
     void set_genres(std::string const& genres);
     uint32_t key() const { return _key; }
 
-    void print();
+    void print() const;
 
    private:
     uint32_t _key;

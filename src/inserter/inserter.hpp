@@ -5,13 +5,17 @@
 #include "csv/row.hpp"
 #include "entry/movie.hpp"
 #include "entry/rating.hpp"
+#include "entry/user.hpp"
 #include "hash_table/quadratic_probing.hpp"
 
 namespace inserter {
-class movie_table {
+class inserter {
    public:
-    using table_type = hash_table::quadratic_probing<uint32_t, entry::movie>;
-    movie_table(std::ifstream& movies, std::ifstream& ratings, table_type& table);
+    using movie_table = hash_table::quadratic_probing<uint32_t, entry::movie>;
+    using user_table = hash_table::quadratic_probing<uint32_t, entry::user>;
+
+    inserter(std::ifstream& movies, std::ifstream& ratings,
+             movie_table& movie_table, user_table& user_table);
     void load();
 
    private:
@@ -22,7 +26,8 @@ class movie_table {
 
     std::ifstream& _movies;
     std::ifstream& _ratings;
-    table_type& _table;
+    movie_table& _movie_table;
+    user_table& _user_table;
     std::map<uint32_t, std::pair<float, uint32_t>> _rating_map;
 };  // namespace movie_table
 }  // namespace inserter
