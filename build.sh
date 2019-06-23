@@ -6,12 +6,12 @@ FOLDERS="src \
          src/csv \
          src/hash_table \
          src/entry \
-				 src/inserter"
+		 src/inserter"
 
-PROJECT_DIR="/home/jeandiego/UFRGS/CPD/movielens"
+PROJECT_DIR="/home/jeandiego/dev/movielens"
 BIN_DIR="$PROJECT_DIR/build"
 CC=g++
-CFLAGS="-std=c++17 -Wall -Wextra -Werror -Wpedantic"
+CFLAGS="-g -std=c++17 -Wall -Wextra -Werror -Wpedantic"
 INCLUDES="$PROJECT_DIR/src"
 
 mkdir -p $BIN_DIR
