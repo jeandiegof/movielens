@@ -6,7 +6,8 @@ FOLDERS="src \
          src/csv \
          src/hash_table \
          src/entry \
-		 src/inserter"
+         src/inserter \
+         src/trie"
 
 PROJECT_DIR="/home/jeandiego/dev/movielens"
 BIN_DIR="$PROJECT_DIR/build"
