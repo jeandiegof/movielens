@@ -1,7 +1,7 @@
 #include "trie/trie.hpp"
 
 namespace trie {
-void trie::insert(std::string const& string) {
+void trie::insert(std::string const& string, uint32_t mark) {
     auto node = &root;
 
     for (auto ch : string) {
@@ -13,10 +13,10 @@ void trie::insert(std::string const& string) {
         }
         node = child;
     }
-    node->set_last_char(true);
+    node->set_last_char(mark);
 }
 
-bool trie::contains(std::string const& string) const {
+uint32_t trie::contains(std::string const& string) const {
     auto node = &root;
 
     for (auto ch : string) {

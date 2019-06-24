@@ -9,7 +9,7 @@ class trie {
     node root;
 
    public:
-    void insert(std::string const&);
-    bool contains(std::string const&) const;
+    void insert(std::string const&, uint32_t mark);
+    uint32_t contains(std::string const&) const;
 };
 }  // namespace trie
