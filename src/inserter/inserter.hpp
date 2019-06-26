@@ -7,6 +7,7 @@
 #include "entry/rating.hpp"
 #include "entry/user.hpp"
 #include "hash_table/quadratic_probing.hpp"
+#include "trie/trie.hpp"
 
 namespace inserter {
 class inserter {
@@ -15,7 +16,8 @@ class inserter {
     using user_table = hash_table::quadratic_probing<uint32_t, entry::user>;
 
     inserter(std::ifstream& movies, std::ifstream& ratings,
-             movie_table& movie_table, user_table& user_table);
+             movie_table& movie_table, user_table& user_table,
+             trie::trie& trie);
     void load();
 
    private:
@@ -28,6 +30,7 @@ class inserter {
     std::ifstream& _ratings;
     movie_table& _movie_table;
     user_table& _user_table;
+    trie::trie& _trie;
     std::map<uint32_t, std::pair<float, uint32_t>> _rating_map;
 };  // namespace movie_table
 }  // namespace inserter

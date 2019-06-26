@@ -1,5 +1,6 @@
 #include "inserter/inserter.hpp"
 #include <algorithm>
+#include <sstream>
 
 std::istream& operator>>(std::istream& str, csv::row& data) {
     data.read_row(str);
@@ -8,11 +9,13 @@ std::istream& operator>>(std::istream& str, csv::row& data) {
 
 namespace inserter {
 inserter::inserter(std::ifstream& movies, std::ifstream& ratings,
-                   movie_table& movie_table, user_table& user_table)
+                   movie_table& movie_table, user_table& user_table,
+                   trie::trie& trie)
     : _movies(movies),
       _ratings(ratings),
       _movie_table(movie_table),
-      _user_table(user_table) {
+      _user_table(user_table),
+      _trie(trie) {
 }
 
 void inserter::load() {
@@ -30,11 +33,20 @@ void inserter::from_movies() {
 
         entry::movie entry;
         entry.set_key(movie_id);
-        entry.set_genres(row[2]);
+        // CSV row is not able to escape commas yet, so
+        // we have a workaround
+        std::stringstream string_sum;
+        for (size_t i = 1; i < row.size() - 1; i++) {
+            string_sum << row[i] << ",";
+        }
+
+        entry.set_title(string_sum.str());
+        entry.set_genres(row[row.size() - 1]);
         entry.set_average_rating(_rating_map[movie_id].first);
         entry.set_rating_count(_rating_map[movie_id].second);
 
         _movie_table.insert(entry.key(), entry);
+        _trie.insert(string_sum.str(), movie_id);
     }
 }
 

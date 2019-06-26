@@ -8,9 +8,10 @@ void movie::set_genres(std::string const& genres) {
 }
 
 void movie::print() const {
-    std::cout << "movieId " << _key << std::endl;
-    std::cout << "\taverage rating: " << _rating << std::endl;
-    std::cout << "\trating count: " << _rating_count << std::endl;
-    std::cout << "\tgenres: " << _genres << std::endl;
+    std::cout << _key << "\t";
+    std::cout << _title << "\t";
+    std::cout << _genres << "\t";
+    std::cout << _rating << "\t";
+    std::cout << _rating_count << std::endl;
 }
 }  // namespace entry
