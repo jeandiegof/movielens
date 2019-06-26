@@ -43,6 +43,6 @@ void trie::contains_prefix(std::string const& prefix) const {
     std::cout << "Found prefix " << prefix << std::endl;
     std::cout << "Printing all subwords..." << std::endl;
     std::cout << node->is_last_char() << " " << std::endl;
-    node->get_subwords(node);
+    node->get_subwords();
 }
 }  // namespace trie
