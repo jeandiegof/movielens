@@ -23,7 +23,11 @@ class console {
     std::string get_query();
     bool handle_query(std::string query);
     void handle_movie(std::string query);
-    bool is_numeric(std::string const& string);
+    void handle_user(std::string query);
+
+    bool is_by_id(std::string const& query);
+    void find_movie_id(std::string query);
+    void find_movie_string(std::string query);
 
     query_class parse_query(std::string query);
 

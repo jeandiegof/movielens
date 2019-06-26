@@ -6,6 +6,16 @@
 #include "inserter/inserter.hpp"
 #include "trie/trie.hpp"
 
+bool is_by_id(std::string query) {
+    bool is_id = true;
+    for (size_t i = 6; i < query.size(); i++) {
+        if (query[i] == ' ' || i > 20 || !std::isdigit(query[i])) {
+            is_id = false;
+        }
+    }
+    return is_id;
+}
+
 int main() {
     hash_table::quadratic_probing<uint32_t, entry::movie> movie_table;
     movie_table.set_size(50957);
@@ -14,7 +24,7 @@ int main() {
     user_table.set_size(173137);
 
     std::ifstream movies_file("dataset/movie.csv");
-    std::ifstream ratings_file("dataset/rating.csv");
+    std::ifstream ratings_file("dataset/microrating.csv");
     trie::trie trie;
 
     inserter::inserter database(movies_file, ratings_file,
@@ -23,19 +33,6 @@ int main() {
 
     console::console console(movie_table, user_table, trie);
     console.start();
-
-    return 0;
-
-    std::cout << "Searching..." << std::endl;
-    std::cout << std::flush;
-    auto k = user_table.find(5518);
-    k.print();
-
-    k = user_table.find(138490);
-    k.print();
-
-    k = user_table.find(138493);
-    k.print();
 
     return 0;
 }

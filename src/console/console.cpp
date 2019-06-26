@@ -16,7 +16,7 @@ console::console(hash_table::quadratic_probing<uint32_t, entry::movie>& movie_ta
 void console::start() {
     std::string query = get_query();
     handle_query(query);
-    start();
+    start();  // shouldn't be here
 }
 
 std::string console::get_query() {
@@ -34,7 +34,7 @@ bool console::handle_query(std::string query) {
             handle_movie(query);
             break;
         case query_class::user:
-            std::cout << "Handling user" << std::endl;
+            handle_user(query);
             break;
         case query_class::top_n:
             std::cout << "Handling topn" << std::endl;
@@ -68,29 +68,51 @@ console::query_class console::parse_query(std::string query) {
 }
 
 void console::handle_movie(std::string query) {
+    if (is_by_id(query)) {
+        find_movie_id(query);
+    } else {
+        find_movie_string(query);
+    }
+    return;
+}
+
+void console::handle_user(std::string query) {
+    std::string user_id(query, 5, query.size());
+    std::cout << "User id " << user_id << std::endl;
+}
+
+void console::find_movie_id(std::string query) {
     std::istringstream stream(query);
     stream >> query;  // movie
 
     std::string data;
-    stream >> data;  // id or title/prefix
+    stream >> data;  // movie_id
 
-    uint32_t movie_id = 0;
-    if (is_numeric(data)) {
-        movie_id = std::stoi(data);
-        auto result = _movie_table.find(movie_id);
+    uint32_t movie_id = std::stoi(data);
+    auto result = _movie_table.find(movie_id);
+    if (result.key() != 0) {
         result.print();
-    } else {
-        auto list = _trie.contains_prefix(data);
-        std::for_each(list.begin(), list.end(), [](auto movie) {
-            movie.print();
-        })
+        return;
     }
+    std::cout << "movie_id not found" << std::endl;
 }
 
-bool console::is_numeric(std::string const& string) {
-    return !string.empty() &&
-           std::find_if(string.begin(), string.end(), [](char ch) {
-               return !std::isdigit(ch);
-           }) == string.end();
+void console::find_movie_string(std::string query) {
+    std::string prefix(query, 6, query.size() - 1);
+    auto list = _trie.contains_prefix(prefix);
+    std::for_each(list.begin(), list.end(), [&](auto movie) {
+        auto result = _movie_table.find(movie);
+        result.print();
+    });
+}
+
+bool console::is_by_id(std::string const& query) {
+    bool is_id = true;
+    for (size_t i = 6; i < query.size(); i++) {
+        if (query[i] == ' ' || i > 20 || !std::isdigit(query[i])) {
+            is_id = false;
+        }
+    }
+    return is_id;
 }
 }  // namespace console

@@ -1,4 +1,5 @@
 #include "entry/movie.hpp"
+#include <iomanip>
 #include <iostream>
 
 namespace entry {
@@ -8,10 +9,13 @@ void movie::set_genres(std::string const& genres) {
 }
 
 void movie::print() const {
-    std::cout << _key << "\t";
-    std::cout << _title << "\t";
-    std::cout << _genres << "\t";
-    std::cout << _rating << "\t";
-    std::cout << _rating_count << std::endl;
+    std::cout << std::right
+              << std::setw(8) << _key << "  "
+              << std::left
+              << std::setw(75) << _title
+              << std::setw(45)
+              << _genres << std::setw(5) << _rating
+              << std::setw(8) << _rating_count << std::endl;
+    std::cout << std::flush;
 }
 }  // namespace entry

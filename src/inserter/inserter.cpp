@@ -39,14 +39,18 @@ void inserter::from_movies() {
         for (size_t i = 1; i < row.size() - 1; i++) {
             string_sum << row[i] << ",";
         }
+        std::string const final_title(string_sum.str(), 1, string_sum.str().size() - 3);
+        entry.set_title(final_title);
 
-        entry.set_title(string_sum.str());
-        entry.set_genres(row[row.size() - 1]);
+        std::string const& genres = row[row.size() - 1];
+        std::string final_genres(genres, 1, genres.size() - 3);
+        entry.set_genres(final_genres);
+
         entry.set_average_rating(_rating_map[movie_id].first);
         entry.set_rating_count(_rating_map[movie_id].second);
 
         _movie_table.insert(entry.key(), entry);
-        _trie.insert(string_sum.str(), movie_id);
+        _trie.insert(final_title, movie_id);
     }
 }
 
