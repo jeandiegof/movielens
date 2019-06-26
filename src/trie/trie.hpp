@@ -11,6 +11,6 @@ class trie {
    public:
     void insert(std::string const&, uint32_t mark);
     uint32_t contains(std::string const&) const;
-    void contains_prefix(std::string const& string) const;
+    std::vector<uint32_t> contains_prefix(std::string const& string) const;
 };
 }  // namespace trie
