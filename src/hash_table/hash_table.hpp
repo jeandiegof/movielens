@@ -9,7 +9,7 @@ template <typename K, typename T>
 class hash_table {
    public:
     hash_table();
-    virtual ~hash_table() { std::cout << "~hash_table()" << std::endl; };
+    virtual ~hash_table(){};
     virtual bool insert(const K& key, const T& data) = 0;
     virtual const T find(const K& key) = 0;
 
@@ -33,7 +33,6 @@ hash_table<K, T>::hash_table()
       _is_full(false),
       _insertions(0),
       _collisions(0) {
-    std::cout << "hash_table()" << std::endl;
 }
 
 template <typename K, typename T>

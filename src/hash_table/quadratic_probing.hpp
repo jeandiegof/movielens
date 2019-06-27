@@ -7,8 +7,8 @@ template <typename K, typename T>
 class quadratic_probing : public hash_table<K, T> {
    public:
     using base = hash_table<K, T>;
-    quadratic_probing() { std::cout << "quadractic_probing()" << std::endl; }
-    ~quadratic_probing() { std::cout << "~quadractic_probing()" << std::endl; }
+    quadratic_probing() {}
+    ~quadratic_probing() {}
     bool insert(const K& key, const T& d) override;
     const T find(const K& key) override;
 

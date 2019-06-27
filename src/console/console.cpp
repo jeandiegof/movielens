@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include "sort/sort.hpp"
 
 namespace console {
 console::console(hash_table::quadratic_probing<uint32_t, entry::movie>& movie_table,
@@ -100,10 +101,11 @@ void console::handle_user(std::string query) {
 }
 
 void console::handle_top_n(std::string query) {
-    // parsear a query (istringstream)
-    std::cout << "topn " << query << std::endl;
-    std::string genre("Sci-Fi");
-    uint32_t n = 10;
+    // parsear a query (istringstream) top10 xxxxx
+    auto separator_index = query.find(" ");
+    std::string n_str(query, 3, separator_index - 1);
+    uint32_t n = std::stoi(n_str);
+    std::string genre(query, separator_index + 1, query.size() - 1);
 
     std::vector<entry::movie> movies;
     auto movie_ids = _trie.subwords();
@@ -117,9 +119,10 @@ void console::handle_top_n(std::string query) {
         }
     }
 
-    std::sort(movies.begin(), movies.end(), [](const auto& lhs, const auto& rhs) {
-        return lhs.rating() > rhs.rating();
-    });
+    //std::sort(movies.begin(), movies.end(), [](const auto& lhs, const auto& rhs) {
+    //    return lhs.rating() > rhs.rating();
+    //});
+    sort::sort(movies);
 
     for (size_t i = 0; i < movies.size() && i < n; i++) {
         movies[i].print();
