@@ -18,7 +18,6 @@ class quadratic_probing : public hash_table<K, T> {
 
 template <typename K, typename T>
 uint32_t quadratic_probing<K, T>::hash(const K& key) {
-    // TODO remove this hash function
     return 1 + (key % (base::table.size() - 1));
 }
 
@@ -41,11 +40,11 @@ bool quadratic_probing<K, T>::insert(const K& key, const T& d) {
         abort();  // for tests only
         return false;
     }
-    //std::cout << "Insertion succeed" << std::endl;
     base::table[hash_value] = d;
     return true;
 }
 
+// it's linear...
 template <typename K, typename T>
 const T quadratic_probing<K, T>::find(const K& key) {
     K hash_value = hash(key);
@@ -57,7 +56,6 @@ const T quadratic_probing<K, T>::find(const K& key) {
 
     if (base::table[hash_value].key() == 0) {
         std::cout << "Error: " << key << " not found" << std::endl;
-        abort();  // for tests only
         return {};
     } else {
         return base::table[hash_value];

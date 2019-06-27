@@ -24,7 +24,9 @@ class console {
     bool handle_query(std::string query);
     void handle_movie(std::string query);
     void handle_user(std::string query);
+    void handle_top_n(std::string query);
 
+    bool check_genre(entry::movie& movie, std::string genre);
     bool is_by_id(std::string const& query);
     void find_movie_id(std::string query);
     void find_movie_string(std::string query);

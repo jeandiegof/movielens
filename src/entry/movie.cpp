@@ -14,7 +14,7 @@ void movie::print() const {
               << std::left
               << std::setw(75) << _title
               << std::setw(45)
-              << _genres << std::setw(5) << _rating
+              << _genres << std::setw(5) << _rating << "  "
               << std::setw(8) << _rating_count << std::endl;
     std::cout << std::flush;
 }

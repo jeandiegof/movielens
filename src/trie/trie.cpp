@@ -49,4 +49,12 @@ std::vector<uint32_t> trie::contains_prefix(std::string const& prefix) const {
 
     return movie_ids;
 }
+
+std::vector<uint32_t> trie::subwords() {
+    auto node = &root;
+    std::vector<uint32_t> movie_ids;
+    node->get_subwords(movie_ids);
+
+    return movie_ids;
+}
 }  // namespace trie

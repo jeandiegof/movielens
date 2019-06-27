@@ -8,6 +8,7 @@ class user {
     void set_key(uint32_t key) { _user_id = key; }
     inline uint32_t key() const { return _user_id; }
     void add_rating(std::pair<uint32_t, float> rating);
+    std::vector<std::pair<uint32_t, float>> get_ratings() const;
     void print() const;
     void clear();
 

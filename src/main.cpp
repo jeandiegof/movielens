@@ -24,12 +24,15 @@ int main() {
     user_table.set_size(173137);
 
     std::ifstream movies_file("dataset/movie.csv");
-    std::ifstream ratings_file("dataset/microrating.csv");
+    std::ifstream ratings_file("dataset/rating.csv");
     trie::trie trie;
 
     inserter::inserter database(movies_file, ratings_file,
                                 movie_table, user_table, trie);
     database.load();
+
+    movies_file.close();
+    ratings_file.close();
 
     console::console console(movie_table, user_table, trie);
     console.start();

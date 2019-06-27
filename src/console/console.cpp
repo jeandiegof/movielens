@@ -1,5 +1,6 @@
 #include "console/console.hpp"
 #include <algorithm>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -37,7 +38,7 @@ bool console::handle_query(std::string query) {
             handle_user(query);
             break;
         case query_class::top_n:
-            std::cout << "Handling topn" << std::endl;
+            handle_top_n(query);
             break;
         case query_class::tags:
             std::cout << "Tags are not supported yet." << std::endl;
@@ -77,8 +78,57 @@ void console::handle_movie(std::string query) {
 }
 
 void console::handle_user(std::string query) {
-    std::string user_id(query, 5, query.size());
-    std::cout << "User id " << user_id << std::endl;
+    std::string id(query, 5, query.size());
+    auto user_id = std::stoi(id);
+    auto ratings = _user_table.find(user_id).get_ratings();
+
+    for (auto&& rating : ratings) {
+        auto movie = _movie_table.find(rating.first);
+
+        std::cout << std::right
+                  << std::setw(8)
+                  << rating.second << "    "
+                  << std::left
+                  << std::setw(75)
+                  << movie.title()
+                  << std::right
+                  << std::setw(8)
+                  << movie.rating() << "    "
+                  << std::right
+                  << movie.count() << std::endl;
+    }
+}
+
+void console::handle_top_n(std::string query) {
+    // parsear a query (istringstream)
+    std::cout << "topn " << query << std::endl;
+    std::string genre("Sci-Fi");
+    uint32_t n = 10;
+
+    std::vector<entry::movie> movies;
+    auto movie_ids = _trie.subwords();
+
+    for (auto movie_id : movie_ids) {
+        entry::movie movie = _movie_table.find(movie_id);
+        if (movie.key() != 0) {
+            if (check_genre(movie, genre)) {
+                movies.push_back(movie);
+            }
+        }
+    }
+
+    std::sort(movies.begin(), movies.end(), [](const auto& lhs, const auto& rhs) {
+        return lhs.rating() > rhs.rating();
+    });
+
+    for (size_t i = 0; i < movies.size() && i < n; i++) {
+        movies[i].print();
+    }
+}
+
+bool console::check_genre(entry::movie& movie, std::string genre) {
+    std::string genres = movie.genres();
+    return (genres.find(genre) != std::string::npos) && movie.count() > 1000;
 }
 
 void console::find_movie_id(std::string query) {

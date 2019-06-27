@@ -10,7 +10,12 @@ class movie {
     void set_average_rating(float rating) { _rating = rating; }
     void set_rating_count(uint32_t count) { _rating_count = count; }
     void set_genres(std::string const& genres);
+
     uint32_t key() const { return _key; }
+    std::string const& title() const { return _title; }
+    float rating() const { return _rating; }
+    uint32_t count() const { return _rating_count; }
+    std::string genres() const { return _genres; }
 
     void print() const;
 
