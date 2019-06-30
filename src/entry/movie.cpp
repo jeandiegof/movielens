@@ -9,13 +9,20 @@ void movie::set_genres(std::string const& genres) {
 }
 
 void movie::print() const {
-    std::cout << std::right
-              << std::setw(8) << _key << "  "
+    std::cout << std::setw(65) << std::setfill(' ')
+              << std::right
+              << std::setw(8)
+              << _key << "  "
               << std::left
-              << std::setw(65) << ((_title.size() > 45) ? _title.substr(0, 45) + "..." : _title)
-              << std::setw(45)
-              << _genres << std::setw(5) << _rating << "  "
-              << std::setw(8) << _rating_count << std::endl;
+              << std::setw(65) << std::setfill(' ')
+              << ((_title.size() > 55) ? _title.substr(0, 55) + "..." : _title)
+              << std::setw(45) << std::setfill(' ')
+              << _genres
+              << std::setw(8) << std::setfill('0')
+              << _rating << "  "
+              << std::setw(8) << std::setfill(' ')
+              << _rating_count
+              << std::endl;
     std::cout << std::flush;
 }
 }  // namespace entry
