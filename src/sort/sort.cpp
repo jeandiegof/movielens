@@ -1,6 +1,30 @@
 #include "sort/sort.hpp"
+#include <algorithm>
 
 namespace sort {
+int32_t partition(std::vector<entry::rating>& list, int32_t low, int32_t high) {
+    float pivot = list[high].get_rating();
+    int32_t i = (low - 1);
+
+    for (int j = low; j <= high - 1; j++) {
+        if (list[j].get_rating() <= pivot) {
+            i++;
+            std::swap(list[i], list[j]);
+        }
+    }
+    std::swap(list[i + 1], list[high]);
+    return (i + 1);
+}
+
+void quicksort(std::vector<entry::rating>& list, int32_t low, int32_t high) {
+    if (low < high) {
+        int32_t pi = partition(list, low, high);
+
+        quicksort(list, low, pi - 1);
+        quicksort(list, pi + 1, high);
+    }
+}
+
 void sort(std::vector<uint32_t>& list) {
     auto current_item = list[1];
     int32_t helper;

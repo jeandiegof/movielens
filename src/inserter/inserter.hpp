@@ -15,6 +15,7 @@ class inserter {
    public:
     using movie_table = hash_table::quadratic_probing<uint32_t, entry::movie>;
     using user_table = hash_table::quadratic_probing<uint32_t, entry::user>;
+    using rating_map = std::map<uint32_t, std::pair<float, uint32_t>>;
 
     inserter(std::ifstream& movies, std::ifstream& ratings, std::ifstream& tags,
              movie_table& movie_table, user_table& user_table,
@@ -25,8 +26,7 @@ class inserter {
     void from_tags();
     void from_movies();
     void from_ratings();
-    void average_rating(std::vector<entry::rating>& entries);
-    void sort_rating(std::vector<entry::rating>& entries);
+    void average_rating(rating_map& map);
 
     std::ifstream& _movies;
     std::ifstream& _ratings;

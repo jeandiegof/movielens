@@ -81,15 +81,23 @@ void inserter::from_ratings() {
     csv::row row;
     _ratings >> row;
 
+    rating_map map;
+
     while (_ratings >> row) {
         uint32_t const user_id = std::stoi(row[0]);
         uint32_t const movie_id = std::stoi(row[1]);
         float const rating = std::stof(row[2]);
 
-        entry::rating rating_entry;
-        rating_entry.set_key(movie_id);
-        rating_entry.set_rating(rating);
-        rating_entries.push_back(rating_entry);
+        // accumulate rating for a movie_id
+        auto entry = map.find(movie_id);
+        if (entry != map.end()) {
+            float old_rating = entry->second.first;
+            uint32_t old_count = entry->second.second;
+            entry->second.first = old_rating + rating;
+            entry->second.second = ++old_count;
+        } else {
+            map.insert({movie_id, {rating, 1}});
+        }
 
         if (_last_user != user_id) {
             _user_table.insert(user_entry.key(), user_entry);
@@ -101,39 +109,17 @@ void inserter::from_ratings() {
             user_entry.add_rating({movie_id, rating});
         }
     }
-    // don't forget the last one
     _user_table.insert(user_entry.key(), user_entry);
-    // there wouldn't be need to sort if I had used a map when
-    // reading the file.
-    average_rating(rating_entries);
+    average_rating(map);
 }
 
-void inserter::sort_rating(std::vector<entry::rating>& entries) {
-    std::cout << "Sorting..." << std::endl;
-    //sort::sort(entries);
-    std::sort(entries.begin(), entries.end(), [](const auto& lhs, const auto& rhs) {
-        return lhs.key() < rhs.key();
-    });
-}
+void inserter::average_rating(rating_map& map) {
+    for (auto& entry : map) {
+        uint32_t movie_id = entry.first;
+        float rating = entry.second.first;
+        uint32_t count = entry.second.second;
 
-void inserter::average_rating(std::vector<entry::rating>& entries) {
-    sort_rating(entries);
-    std::cout << "Evaluating average rating..." << std::endl;
-    auto last = entries[0];
-    uint32_t occurrences = 0;
-    float rating = 0;
-
-    for (uint32_t i = 0; i < entries.size(); i++) {
-        if (entries[i].key() == last.key()) {
-            occurrences++;
-            rating += entries[i].get_rating();
-        } else {
-            rating /= occurrences;
-            _rating_map.insert({last.key(), {rating, occurrences}});
-            last = entries[i];
-            rating = entries[i].get_rating();
-            occurrences = 1;
-        }
+        _rating_map.insert({movie_id, {rating / count, count}});
     }
 }
 }  // namespace inserter

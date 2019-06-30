@@ -5,6 +5,7 @@
 #include "console/console.hpp"
 #include "entry/user.hpp"
 #include "inserter/inserter.hpp"
+#include "sort/sort.hpp"
 #include "trie/tags_trie.hpp"
 #include "trie/trie.hpp"
 
@@ -26,7 +27,7 @@ int main() {
     user_table.set_size(173137);
 
     std::ifstream movies_file("dataset/movie.csv");
-    std::ifstream ratings_file("dataset/microrating.csv");
+    std::ifstream ratings_file("dataset/rating.csv");
     std::ifstream tags_file("dataset/tag.csv");
 
     trie::trie trie;
