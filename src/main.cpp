@@ -9,16 +9,6 @@
 #include "trie/tags_trie.hpp"
 #include "trie/trie.hpp"
 
-bool is_by_id(std::string query) {
-    bool is_id = true;
-    for (size_t i = 6; i < query.size(); i++) {
-        if (query[i] == ' ' || i > 20 || !std::isdigit(query[i])) {
-            is_id = false;
-        }
-    }
-    return is_id;
-}
-
 int main() {
     hash_table::quadratic_probing<uint32_t, entry::movie> movie_table;
     movie_table.set_size(50957);
