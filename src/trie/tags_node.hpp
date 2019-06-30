@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include <map>
 #include <vector>
 
@@ -11,7 +12,11 @@ class tags_node {
    public:
     tags_node() {}
     std::vector<uint32_t> is_last_char() const { return _movie_ids; }
-    void set_last_char(uint32_t movie_id) { _movie_ids.push_back(movie_id); }
+    void set_last_char(uint32_t movie_id) {
+        // add entry only if it not exists
+        auto it = std::find(_movie_ids.begin(), _movie_ids.end(), movie_id);
+        if (it == _movie_ids.end()) _movie_ids.push_back(movie_id);
+    }
 
     void add_child(tags_node node, char index) {
         _alphabet.insert({index, std::move(node)});

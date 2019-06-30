@@ -127,14 +127,37 @@ void console::handle_top_n(std::string query) {
 }
 
 void console::handle_tags(std::string query) {
-    std::cout << query << std::endl;
-    auto result = _tags_trie.contains("\"jesus\"");
-    std::for_each(result.begin(), result.end(), [&](auto const& id) {
-        auto movie = _movie_table.find(id);
-        if (movie.key() != 0) {
-            movie.print();
+    std::string tag;
+    std::istringstream stream(query);
+    stream >> tag;  // tags
+
+    std::vector<std::string> tags;
+    while (stream >> tag) {
+        std::string without_marks(tag, 1, tag.size() - 2);
+        tags.push_back(without_marks);
+    }
+
+    std::vector<std::vector<uint32_t>> list;
+    for (auto& entry : tags) {
+        list.push_back(_tags_trie.contains(entry));
+    }
+
+    std::vector<uint32_t> movie_ids(100);
+
+    if (tags.size() > 1) {
+        for (size_t i = 1; i < list.size(); i++) {
+            std::sort(list[i - 1].begin(), list[i - 1].end());
+            std::sort(list[i].begin(), list[i].end());
+            std::set_intersection(list[i - 1].begin(), list[i - 1].end(),
+                                  list[i].begin(), list[i].end(), movie_ids.begin());
         }
-    });
+    } else {
+        movie_ids = list[0];
+    }
+
+    for (auto id : movie_ids) {
+        if (id != 0) _movie_table.find(id).print();
+    }
 }
 
 bool console::check_genre(entry::movie& movie, std::string genre) {

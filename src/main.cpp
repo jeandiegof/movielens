@@ -26,7 +26,7 @@ int main() {
     user_table.set_size(173137);
 
     std::ifstream movies_file("dataset/movie.csv");
-    std::ifstream ratings_file("dataset/rating.csv");
+    std::ifstream ratings_file("dataset/microrating.csv");
     std::ifstream tags_file("dataset/tag.csv");
 
     trie::trie trie;

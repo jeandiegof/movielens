@@ -64,8 +64,9 @@ void inserter::from_tags() {
 
     while (_tags >> row) {
         uint32_t const movie_id = std::stoi(row[1]);
+        std::string const final_tag(row[2], 1, row[2].size() - 2);
 
-        _tags_trie.insert(row[2], movie_id);
+        _tags_trie.insert(final_tag, movie_id);
     }
 }
 
