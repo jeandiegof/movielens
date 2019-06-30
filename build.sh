@@ -4,11 +4,11 @@
 
 FOLDERS="src \
          src/csv \
-         src/hash_table \
          src/entry \
          src/inserter \
          src/trie \
-         src/console"
+         src/console \
+         src/sort"
 
 PROJECT_DIR="/home/jeandiego/dev/movielens"
 BIN_DIR="$PROJECT_DIR/build"

@@ -1,6 +1,7 @@
 #include "inserter/inserter.hpp"
 #include <algorithm>
 #include <sstream>
+#include "sort/sort.hpp"
 
 std::istream& operator>>(std::istream& str, csv::row& data) {
     data.read_row(str);
@@ -8,19 +9,22 @@ std::istream& operator>>(std::istream& str, csv::row& data) {
 }
 
 namespace inserter {
-inserter::inserter(std::ifstream& movies, std::ifstream& ratings,
+inserter::inserter(std::ifstream& movies, std::ifstream& ratings, std::ifstream& tags,
                    movie_table& movie_table, user_table& user_table,
-                   trie::trie& trie)
+                   trie::trie& trie, trie::tags_trie& tags_trie)
     : _movies(movies),
       _ratings(ratings),
+      _tags(tags),
       _movie_table(movie_table),
       _user_table(user_table),
-      _trie(trie) {
+      _trie(trie),
+      _tags_trie(tags_trie) {
 }
 
 void inserter::load() {
     from_ratings();
     from_movies();
+    from_tags();
 }
 
 void inserter::from_movies() {
@@ -51,6 +55,17 @@ void inserter::from_movies() {
 
         _movie_table.insert(entry.key(), entry);
         _trie.insert(final_title, movie_id);
+    }
+}
+
+void inserter::from_tags() {
+    csv::row row;
+    _tags >> row;  // header
+
+    while (_tags >> row) {
+        uint32_t const movie_id = std::stoi(row[1]);
+
+        _tags_trie.insert(row[2], movie_id);
     }
 }
 
@@ -87,11 +102,14 @@ void inserter::from_ratings() {
     }
     // don't forget the last one
     _user_table.insert(user_entry.key(), user_entry);
+    // there wouldn't be need to sort if I had used a map when
+    // reading the file.
     average_rating(rating_entries);
 }
 
 void inserter::sort_rating(std::vector<entry::rating>& entries) {
     std::cout << "Sorting..." << std::endl;
+    //sort::sort(entries);
     std::sort(entries.begin(), entries.end(), [](const auto& lhs, const auto& rhs) {
         return lhs.key() < rhs.key();
     });

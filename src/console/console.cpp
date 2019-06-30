@@ -9,10 +9,11 @@
 namespace console {
 console::console(hash_table::quadratic_probing<uint32_t, entry::movie>& movie_table,
                  hash_table::quadratic_probing<uint32_t, entry::user>& user_table,
-                 trie::trie& trie)
+                 trie::trie& trie, trie::tags_trie& tags_trie)
     : _movie_table(movie_table),
       _user_table(user_table),
-      _trie(trie) {
+      _trie(trie),
+      _tags_trie(tags_trie) {
 }
 
 void console::start() {
@@ -42,7 +43,7 @@ bool console::handle_query(std::string query) {
             handle_top_n(query);
             break;
         case query_class::tags:
-            std::cout << "Tags are not supported yet." << std::endl;
+            handle_tags(query);
             break;
         case query_class::exit:
             exit(0);
@@ -101,7 +102,6 @@ void console::handle_user(std::string query) {
 }
 
 void console::handle_top_n(std::string query) {
-    // parsear a query (istringstream) top10 xxxxx
     auto separator_index = query.find(" ");
     std::string n_str(query, 3, separator_index - 1);
     uint32_t n = std::stoi(n_str);
@@ -119,14 +119,22 @@ void console::handle_top_n(std::string query) {
         }
     }
 
-    //std::sort(movies.begin(), movies.end(), [](const auto& lhs, const auto& rhs) {
-    //    return lhs.rating() > rhs.rating();
-    //});
     sort::sort(movies);
 
     for (size_t i = 0; i < movies.size() && i < n; i++) {
         movies[i].print();
     }
+}
+
+void console::handle_tags(std::string query) {
+    std::cout << query << std::endl;
+    auto result = _tags_trie.contains("\"jesus\"");
+    std::for_each(result.begin(), result.end(), [&](auto const& id) {
+        auto movie = _movie_table.find(id);
+        if (movie.key() != 0) {
+            movie.print();
+        }
+    });
 }
 
 bool console::check_genre(entry::movie& movie, std::string genre) {

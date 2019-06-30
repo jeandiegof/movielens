@@ -7,7 +7,7 @@ class console {
    public:
     console(hash_table::quadratic_probing<uint32_t, entry::movie>& movie_table,
             hash_table::quadratic_probing<uint32_t, entry::user>& user_table,
-            trie::trie& trie);
+            trie::trie& trie, trie::tags_trie& tags_trie);
     void start();
 
    private:
@@ -25,6 +25,7 @@ class console {
     void handle_movie(std::string query);
     void handle_user(std::string query);
     void handle_top_n(std::string query);
+    void handle_tags(std::string query);
 
     bool check_genre(entry::movie& movie, std::string genre);
     bool is_by_id(std::string const& query);
@@ -36,5 +37,6 @@ class console {
     hash_table::quadratic_probing<uint32_t, entry::movie>& _movie_table;
     hash_table::quadratic_probing<uint32_t, entry::user>& _user_table;
     trie::trie& _trie;
+    trie::tags_trie& _tags_trie;
 };
 }  // namespace console
