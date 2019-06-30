@@ -146,8 +146,8 @@ void console::handle_tags(std::string query) {
 
     if (tags.size() > 1) {
         for (size_t i = 1; i < list.size(); i++) {
-            std::sort(list[i - 1].begin(), list[i - 1].end());
-            std::sort(list[i].begin(), list[i].end());
+            sort::sort(list[i - 1]);
+            sort::sort(list[i]);
             std::set_intersection(list[i - 1].begin(), list[i - 1].end(),
                                   list[i].begin(), list[i].end(), movie_ids.begin());
         }
