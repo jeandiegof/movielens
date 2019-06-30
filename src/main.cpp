@@ -30,6 +30,7 @@ int main() {
 
     movies_file.close();
     ratings_file.close();
+    tags_file.close();
 
     console::console console(movie_table, user_table, trie, tags_trie);
     console.start();
