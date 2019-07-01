@@ -10,7 +10,7 @@ class node {
     std::map<char, node> _alphabet;
 
    public:
-    node() : _last_char{0} {}
+    node() : _last_char{0}, movie_id{0} {}
     uint32_t is_last_char() const { return _last_char; }
     void set_last_char(uint32_t is_last_char) { _last_char = is_last_char; }
     void get_subwords(std::vector<uint32_t>& movie_ids) const;
