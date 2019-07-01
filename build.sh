@@ -10,10 +10,10 @@ FOLDERS="src \
          src/console \
          src/sort"
 
-PROJECT_DIR="/home/jeandiego/dev/movielens"
+PROJECT_DIR="/home/jeandiego/UFRGS/CPD/movielens"
 BIN_DIR="$PROJECT_DIR/build"
 CC=g++
-CFLAGS="-g -std=c++17 -Wall -Wextra -Werror -Wpedantic"
+CFLAGS="-std=c++17 -Wall -Wextra -Werror -Wpedantic -O3"
 INCLUDES="$PROJECT_DIR/src"
 
 mkdir -p $BIN_DIR
