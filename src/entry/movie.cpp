@@ -18,7 +18,7 @@ void movie::print() const {
               << ((_title.size() > 55) ? _title.substr(0, 55) + "..." : _title)
               << std::setw(45) << std::setfill(' ')
               << _genres
-              << std::setw(8) << std::setfill('0')
+              << std::setw(8) << std::setfill(' ')
               << _rating << "  "
               << std::setw(8) << std::setfill(' ')
               << _rating_count
