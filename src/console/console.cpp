@@ -91,8 +91,8 @@ void console::handle_user(std::string query) {
                   << std::setw(8)
                   << rating.second << "    "
                   << std::left
-                  << std::setw(75)
-                  << movie.title()
+                  << std::setw(65) << std::setfill(' ')
+                  << ((movie.title().size() > 55) ? movie.title().substr(0, 55) + "..." : movie.title())
                   << std::right
                   << std::setw(8)
                   << movie.rating() << "    "
@@ -162,7 +162,17 @@ void console::handle_tags(std::string query) {
 
 bool console::check_genre(entry::movie& movie, std::string genre) {
     std::string genres = movie.genres();
-    return (genres.find(genre) != std::string::npos) && movie.count() > 1000;
+    std::string const& begin = genre + "|";
+    std::string const& middle = "|" + genre + "|";
+    std::string const& end = "|" + genre;
+
+    if ((genres.find(begin) != std::string::npos ||
+         genres.find(middle) != std::string::npos ||
+         genres.find(end) != std::string::npos) &&
+        movie.count() > 1000) {
+        return true;
+    }
+    return false;
 }
 
 void console::find_movie_id(std::string query) {
