@@ -13,7 +13,7 @@ FOLDERS="src \
 PROJECT_DIR=$(pwd)
 BIN_DIR="$PROJECT_DIR/build"
 CC=g++
-CFLAGS="-std=c++17 -Wall -Wextra -Werror -Wpedantic -O3"
+CFLAGS="-std=c++17 -Wall -Wextra -Werror -Wpedantic -Ofast"
 INCLUDES="$PROJECT_DIR/src"
 
 mkdir -p $BIN_DIR
