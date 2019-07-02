@@ -119,8 +119,9 @@ void console::handle_top_n(std::string query) {
         }
     }
 
-    sort::sort(movies);
-
+    if (movies.size() > 1) {
+        sort::sort(movies);
+    }
     for (size_t i = 0; i < movies.size() && i < n; i++) {
         movies[i].print();
     }
