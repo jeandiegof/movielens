@@ -10,7 +10,7 @@ FOLDERS="src \
          src/console \
          src/sort"
 
-PROJECT_DIR="/home/jeandiego/UFRGS/CPD/movielens"
+PROJECT_DIR=$(pwd)
 BIN_DIR="$PROJECT_DIR/build"
 CC=g++
 CFLAGS="-std=c++17 -Wall -Wextra -Werror -Wpedantic -O3"
